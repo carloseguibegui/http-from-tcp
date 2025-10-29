@@ -1,0 +1,8 @@
+Interfaces in Go
+
+Interfaces allow you to focus on what a type does rather than how it's built. They can help you write more flexible and reusable code by defining behaviors (like methods) that different types can share. This makes it easy to swap out or update parts of your code without changing everything else.
+
+Interfaces are just collections of method signatures. A type "implements" an interface if it has methods that match the interface's method signatures.
+
+In the following example, a "shape" must be able to return its area and perimeter. Both rect and circle fulfill the interface.
+This is the end of messages.txt

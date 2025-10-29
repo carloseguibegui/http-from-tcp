@@ -1,0 +1,12 @@
+Request line:
+- Method: POST
+- Target: /coffee
+- Version: 1.1
+Headers:
+- accept: */*
+- content-length: 39
+- host: localhost:42069
+- content-type: application/json
+- user-agent: insomnia/11.6.2
+Body:
+{"type": "dark mode", "size": "medium"}

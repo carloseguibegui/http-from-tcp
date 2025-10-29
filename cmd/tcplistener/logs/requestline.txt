@@ -1,0 +1,4 @@
+Request line:
+- Method: GET
+- Target: /go/httpfromctp
+- Version: 1.1
