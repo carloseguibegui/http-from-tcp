@@ -11,6 +11,9 @@ RUN go mod download
 # Copiar el código fuente
 COPY . .
 
+# Generar documentación Swagger
+RUN swag init -g cmd/httpserver/main.go
+
 # Compilar la aplicación
 RUN CGO_ENABLED=0 GOOS=linux go build -o httpserver ./cmd/httpserver
 

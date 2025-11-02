@@ -4,6 +4,7 @@ import (
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
+	"httpfromtcp/docs" // Importar el paquete docs generado por swag
 	"httpfromtcp/internal/headers"
 	"httpfromtcp/internal/request"
 	"httpfromtcp/internal/response"
@@ -37,7 +38,11 @@ var port = getPort()
 // @description     API para manejo de peticiones HTTP personalizadas
 // @host            localhost:8080
 // @BasePath        /
+// @schemes         http
 func main() {
+	// Inicializar la documentación Swagger
+	docs.SwaggerInfo.Host = fmt.Sprintf("localhost:%d", port)
+
 	s, err := server.Serve(port, func(w *response.Writer, req *request.Request) {
 		body := respond200()
 		h := response.GetDefaultHeaders(0)
@@ -98,6 +103,23 @@ func main() {
 			return
 		} else if endpoint == "/json" {
 			body = respondJSON()
+			h.Replace("Content-type", "application/json")
+			h.Replace("Content-length", strconv.Itoa(len(body)))
+			w.WriteStatusLine(status)
+			w.WriteHeaders(h)
+			w.WriteBody(body)
+			return
+		} else if endpoint == "/swagger/" || endpoint == "/swagger/index.html" {
+			// Servir la página HTML de Swagger UI
+			body = respondSwagger()
+			h.Replace("Content-type", "text/html")
+			h.Replace("Content-length", strconv.Itoa(len(body)))
+			w.WriteStatusLine(status)
+			w.WriteHeaders(h)
+			w.WriteBody(body)
+			return
+		} else if endpoint == "/swagger/doc.json" {
+			body = []byte(docs.SwaggerInfo.ReadDoc())
 			h.Replace("Content-type", "application/json")
 			h.Replace("Content-length", strconv.Itoa(len(body)))
 			w.WriteStatusLine(status)
@@ -202,4 +224,37 @@ func toStr(b []byte) string {
 		r += fmt.Sprintf("%02x", e)
 	}
 	return r
+}
+
+func respondSwagger() []byte {
+	return []byte(`<!DOCTYPE html>
+<html>
+<head>
+  <title>Swagger UI</title>
+  <link rel="stylesheet" type="text/css" href="https://unpkg.com/swagger-ui-dist@3/swagger-ui.css">
+  <style>
+    html { box-sizing: border-box; overflow: -moz-scrollbars-vertical; overflow-y: scroll; }
+    *, *:before, *:after { box-sizing: inherit; }
+    body { margin: 0; background: #fafafa; }
+  </style>
+</head>
+<body>
+  <div id="swagger-ui"></div>
+  <script src="https://unpkg.com/swagger-ui-dist@3/swagger-ui-bundle.js"></script>
+  <script>
+    window.onload = function() {
+      const ui = SwaggerUIBundle({
+        url: "/swagger/doc.json",
+        dom_id: '#swagger-ui',
+        presets: [
+          SwaggerUIBundle.presets.apis,
+          SwaggerUIBundle.SwaggerUIStandalonePreset
+        ],
+        layout: "BaseLayout"
+      });
+      window.ui = ui;
+    };
+  </script>
+</body>
+</html>`)
 }
