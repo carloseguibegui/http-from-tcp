@@ -1,0 +1,57 @@
+basePath: /
+host: localhost:8080
+info:
+  contact: {}
+  description: API para manejo de peticiones HTTP personalizadas
+  title: HTTP From TCP API
+  version: "1.0"
+paths:
+  /:
+    get:
+      description: Returns 200 OK response
+      produces:
+      - text/html
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Shows OK response
+      tags:
+      - responses
+  /json:
+    get:
+      description: Returns JSON
+      produces:
+      - application/json
+      responses: {}
+      summary: Shows JSON
+      tags:
+      - responses
+  /myproblem:
+    get:
+      description: Returns 500 Internal Server Error
+      produces:
+      - text/html
+      responses:
+        "500":
+          description: 500 Internal Server Error
+          schema:
+            type: string
+      summary: Shows Internal Server Error
+      tags:
+      - responses
+  /yourproblem:
+    get:
+      description: Returns 400 Bad Request response
+      produces:
+      - text/html
+      responses:
+        "400":
+          description: 400 Bad Request
+          schema:
+            type: string
+      summary: Shows bad request response
+      tags:
+      - responses
+swagger: "2.0"

@@ -32,6 +32,11 @@ func getPort() uint16 {
 
 var port = getPort()
 
+// @title           HTTP From TCP API
+// @version         1.0
+// @description     API para manejo de peticiones HTTP personalizadas
+// @host            localhost:8080
+// @BasePath        /
 func main() {
 	s, err := server.Serve(port, func(w *response.Writer, req *request.Request) {
 		body := respond200()
@@ -119,6 +124,13 @@ func main() {
 	log.Println("Server gracefully stopped")
 }
 
+// Respond200 godoc
+// @Summary      Shows OK response
+// @Description  Returns 200 OK response
+// @Tags         responses
+// @Produce      text/html
+// @Success      200  {string}  string  "OK"
+// @Router       / [get]
 func respond200() []byte {
 	return []byte(`<html>
   <head>
@@ -131,6 +143,13 @@ func respond200() []byte {
 </html>`)
 }
 
+// Respond400 godoc
+// @Summary      Shows bad request response
+// @Description  Returns 400 Bad Request response
+// @Tags         responses
+// @Produce      text/html
+// @Success      400  {string}  string  "400 Bad Request"
+// @Router       /yourproblem [get]
 func respond400() []byte {
 	return []byte(`<html>
   <head>
@@ -143,6 +162,13 @@ func respond400() []byte {
 </html>`)
 }
 
+// Respond500 godoc
+// @Summary      Shows Internal Server Error
+// @Description  Returns 500 Internal Server Error
+// @Tags         responses
+// @Produce      text/html
+// @Success      500  {string}  string  "500 Internal Server Error"
+// @Router       /myproblem [get]
 func respond500() []byte {
 	return []byte(`<html>
   <head>
@@ -155,6 +181,12 @@ func respond500() []byte {
 </html>`)
 }
 
+// Respond500 godoc
+// @Summary      Shows JSON
+// @Description  Returns JSON
+// @Tags         responses
+// @Produce      application/json
+// @Router       /json [get]
 func respondJSON() []byte {
 	data := response.JsonData{Message: "Success"}
 	jsonBytes, err := json.Marshal(data)
