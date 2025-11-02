@@ -1,0 +1,11 @@
+# Ignorar archivos y directorios innecesarios
+.git
+.gitignore
+Dockerfile
+.dockerignore
+README.md
+**/*_test.go
+**/logs/*
+**/assets/*
+**/bin/*
+**/pkg/*

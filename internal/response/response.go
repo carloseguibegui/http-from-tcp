@@ -14,6 +14,10 @@ type Writer struct {
 type Response struct {
 }
 
+type JsonData struct {
+	Message string `json:"message"`
+}
+
 type StatusCode int
 
 const (

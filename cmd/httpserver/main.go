@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/sha256"
+	"encoding/json"
 	"fmt"
 	"httpfromtcp/internal/headers"
 	"httpfromtcp/internal/request"
@@ -16,7 +17,20 @@ import (
 	"syscall"
 )
 
-const port = 42069
+func getPort() uint16 {
+	portStr := os.Getenv("PORT")
+	if portStr == "" {
+		return 8080
+	}
+	port, err := strconv.ParseUint(portStr, 10, 16)
+	if err != nil {
+		log.Printf("Invalid PORT env var, using default port 8080")
+		return 8080
+	}
+	return uint16(port)
+}
+
+var port = getPort()
 
 func main() {
 	s, err := server.Serve(port, func(w *response.Writer, req *request.Request) {
@@ -77,6 +91,14 @@ func main() {
 			w.WriteHeaders(h)
 			w.WriteBody(f)
 			return
+		} else if endpoint == "/json" {
+			body = respondJSON()
+			h.Replace("Content-type", "application/json")
+			h.Replace("Content-length", strconv.Itoa(len(body)))
+			w.WriteStatusLine(status)
+			w.WriteHeaders(h)
+			w.WriteBody(body)
+			return
 		}
 		h.Replace("Content-length", strconv.Itoa(len(body)))
 		h.Replace("Content-type", "text/html")
@@ -95,6 +117,18 @@ func main() {
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
 	<-sigChan
 	log.Println("Server gracefully stopped")
+}
+
+func respond200() []byte {
+	return []byte(`<html>
+  <head>
+    <title>200 OK</title>
+  </head>
+  <body>
+    <h1>Success!</h1>
+    <p>Your request was an absolute banger.</p>
+  </body>
+</html>`)
 }
 
 func respond400() []byte {
@@ -121,16 +155,13 @@ func respond500() []byte {
 </html>`)
 }
 
-func respond200() []byte {
-	return []byte(`<html>
-  <head>
-    <title>200 OK</title>
-  </head>
-  <body>
-    <h1>Success!</h1>
-    <p>Your request was an absolute banger.</p>
-  </body>
-</html>`)
+func respondJSON() []byte {
+	data := response.JsonData{Message: "Success"}
+	jsonBytes, err := json.Marshal(data)
+	if err != nil {
+		return nil
+	}
+	return jsonBytes
 }
 
 func toStr(b []byte) string {
