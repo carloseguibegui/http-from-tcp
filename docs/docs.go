@@ -96,7 +96,7 @@ var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
 	Host:             "localhost:8080",
 	BasePath:         "/",
-	Schemes:          []string{},
+	Schemes:          []string{"http"},
 	Title:            "HTTP From TCP API",
 	Description:      "API para manejo de peticiones HTTP personalizadas",
 	InfoInstanceName: "swagger",

@@ -54,4 +54,6 @@ paths:
       summary: Shows bad request response
       tags:
       - responses
+schemes:
+- http
 swagger: "2.0"
