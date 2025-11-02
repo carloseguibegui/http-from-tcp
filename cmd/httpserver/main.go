@@ -109,7 +109,7 @@ func main() {
 			w.WriteHeaders(h)
 			w.WriteBody(body)
 			return
-		} else if endpoint == "/swagger/" || endpoint == "/swagger/index.html" {
+		} else if endpoint == "/swagger" || endpoint == "/swagger/index.html" || endpoint == "/"{
 			// Servir la página HTML de Swagger UI
 			body = respondSwagger()
 			h.Replace("Content-type", "text/html")
